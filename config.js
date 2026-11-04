@@ -3,6 +3,8 @@
 const SITE = {
   nickname: "The_Phantom-_-",
   steam: "https://steamcommunity.com/profiles/76561199376299348/",          // Например: https://steamcommunity.com/id/твой_ник
+  steam2: "https://steamcommunity.com/profiles/76561198738794203/",
+  github: "https://github.com/rwqegsdgy",
   discord: "https://discord.com/users/1170673606561382420",        // Ссылка на твой профиль Discord
   server: "https://discord.gg/h8W4zxfbDd",         // Приглашение на ваш сервер Discord
   music: "music.mp3"           // Имя файла в этой папке, например: music.mp3
