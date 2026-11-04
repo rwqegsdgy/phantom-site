@@ -340,31 +340,42 @@
       .player {
         width: min(100%, 345px);
         margin: 25px auto 0;
-        padding: 11px 12px 10px;
-        border: 1px solid rgba(221, 239, 255, .18);
+        padding: 13px 14px 9px;
+        border: 1px solid rgba(221, 239, 255, .16);
         border-radius: 14px;
-        background: rgba(8, 14, 20, .32);
+        background: rgba(9, 15, 22, .38);
         text-align: left;
       }
-      .player-top { display: flex; align-items: center; gap: 11px; }
-      .album-art { width: 48px; height: 48px; flex: 0 0 48px; border-radius: 7px; object-fit: cover; border: 1px solid rgba(255,255,255,.18); }
+      .player-top { display: flex; align-items: center; gap: 10px; }
+      .album-art { width: 46px; height: 46px; flex: 0 0 46px; border-radius: 7px; object-fit: cover; border: 1px solid rgba(255,255,255,.18); }
       .track-info { flex: 1; min-width: 0; }
       .track-name { display: block; color: #fff; font-size: 13px; font-weight: 650; line-height: 1.3; }
       .track-artist { display: block; margin-top: 3px; color: #d1d9e2; font-size: 12px; line-height: 1.3; }
-      .music {
-        width: 44px; height: 44px; flex: 0 0 44px; padding: 0;
+      .volume-toggle, .music {
+        width: 40px; height: 44px; flex: 0 0 40px; padding: 0;
         display: grid; place-items: center;
-        border: 1px solid rgba(224,241,255,.28); border-radius: 50%;
-        background: rgba(220,239,255,.12); color: #fff;
-        cursor: pointer; font: 15px/1 system-ui, sans-serif;
+        border: 0; border-radius: 10px;
+        background: transparent; color: #e9f5ff; cursor: pointer;
         transition: background .2s, transform .2s;
       }
-      .music:hover { background: rgba(220,239,255,.24); }
+      .music { width: 44px; flex-basis: 44px; border: 1px solid rgba(224,241,255,.25); border-radius: 50%; background: rgba(220,239,255,.11); font: 14px/1 system-ui,sans-serif; }
+      .volume-toggle:hover, .volume-toggle[aria-expanded="true"], .music:hover { background: rgba(220,239,255,.18); }
       .music:active { transform: scale(.94); }
       .music[disabled] { opacity: .5; cursor: default; }
-      .volume-row { margin-top: 10px; display: flex; align-items: center; gap: 10px; color: #d9e5f0; font-size: 12px; }
-      .volume-row input { flex: 1; min-width: 0; height: 24px; margin: 0; accent-color: #dcefff; cursor: pointer; }
-      .volume-row input:focus-visible { outline: 3px solid #d8ddff; outline-offset: 3px; }
+      .volume-toggle svg { width: 19px; height: 19px; }
+      .volume-toggle:focus-visible, .music:focus-visible { outline: 3px solid #d8ddff; outline-offset: 3px; }
+      .seek-row { margin-top: 8px; display: flex; align-items: center; gap: 7px; color: #cbd7e1; font-size: 11px; font-variant-numeric: tabular-nums; }
+      .seek-row time { width: 32px; flex: 0 0 32px; text-align: center; }
+      .player input[type="range"] { flex: 1; min-width: 0; height: 32px; margin: 0; padding: 0; appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer; }
+      .player input[type="range"]::-webkit-slider-runnable-track { height: 3px; border-radius: 5px; background: linear-gradient(to right, #d1ebfa 0 var(--progress, 0%), rgba(213,232,245,.25) var(--progress, 0%) 100%); }
+      .player input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance:none; width:10px; height:10px; margin-top:-3.5px; border:0; border-radius:50%; background:#f4fbff; box-shadow:0 0 7px rgba(184,225,255,.55); }
+      .player input[type="range"]::-moz-range-track { height:3px; border-radius:5px; background:rgba(213,232,245,.25); }
+      .player input[type="range"]::-moz-range-progress { height:3px; border-radius:5px; background:#d1ebfa; }
+      .player input[type="range"]::-moz-range-thumb { width:10px; height:10px; border:0; border-radius:50%; background:#f4fbff; }
+      .player input[type="range"]:disabled { opacity:.55; cursor:default; }
+      .player input[type="range"]:focus-visible { outline: 3px solid #d8ddff; outline-offset: 1px; }
+      .volume-row { display:flex; align-items:center; gap:10px; color:#d9e5f0; font-size:12px; }
+      .volume-row[hidden] { display:none; }
       .music-status { margin: 6px 0 0; color: #ffe0df; font-size: 12px; line-height: 1.35; }
       .music-status:empty { display: none; }
       .footer {
@@ -404,9 +415,33 @@
           transition: none;
         }
       }
+
+      .intro-scene { position:fixed; inset:0; z-index:100; overflow:hidden; display:grid; place-items:center; background:linear-gradient(rgba(5, 7, 9, .40), rgba(5, 7, 9, .57)), url("fon.jpg") center / cover no-repeat; color:#f4fbff; opacity:1; transition:opacity .8s ease; }
+      .intro-scene::before, .intro-scene::after { content:""; position:absolute; inset:-20%; pointer-events:none; background:radial-gradient(ellipse 38% 16% at 40% 64%, rgba(167,205,233,.08),transparent 72%),radial-gradient(ellipse 38% 14% at 76% 53%,rgba(139,180,216,.06),transparent 75%); filter:blur(32px); animation:intro-mist 5s ease-in-out infinite alternate; }
+      .intro-scene::after { opacity:.6; animation-direction:alternate-reverse; animation-duration:7s; }
+      @keyframes intro-mist {from{transform:translateX(-6%) scale(1)}to{transform:translateX(6%) scale(1.08)}}
+      .intro-snow { position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+      .intro-flake { position:absolute; top:-8px; left:var(--x); width:var(--s); height:var(--s); border-radius:50%; background:#e8f5ff; opacity:var(--o); box-shadow:0 0 10px rgba(190,226,255,.7); animation:intro-fall var(--t) linear var(--delay) infinite; }
+      @keyframes intro-fall {from{transform:translate3d(0,-10px,0)}to{transform:translate3d(var(--drift),110vh,0)}}
+      .intro-lockup { position:relative; z-index:1; padding:24px; text-align:center; animation:intro-lockup 3.9s ease both; }
+      .intro-kicker { margin:0 0 16px; color:#b7d0e3; font-size:11px; font-weight:700; letter-spacing:.3em; text-transform:uppercase; }
+      .intro-name { margin:0; font-size:clamp(26px, 5vw, 48px); font-weight:650; letter-spacing:.04em; line-height:1.15; text-shadow:0 0 28px rgba(163,212,255,.35); overflow-wrap:anywhere; }
+      .intro-line { width:0; max-width:70vw; height:1px; margin:20px auto 0; background:linear-gradient(90deg, transparent,#c2e6ff,transparent); box-shadow:0 0 14px rgba(187,227,255,.8); animation:intro-line 2s .4s cubic-bezier(.2,.8,.2,1) forwards; }
+      @keyframes intro-lockup { 0%{opacity:0;filter:blur(12px);transform:translateY(14px) scale(.97)} 30%,72%{opacity:1;filter:blur(0);transform:translateY(0) scale(1)} 100%{opacity:0;filter:blur(5px);transform:translateY(-8px) scale(1.025)} }
+      @keyframes intro-line {to{width:220px}}
+      .intro-skip { position:absolute; z-index:2; top:max(18px,env(safe-area-inset-top)); right:20px; min-height:44px; padding:0 13px; border:1px solid rgba(220,238,255,.22); border-radius:9px; background:rgba(18,27,37,.68); color:#e1edf6; font:13px system-ui,sans-serif; cursor:pointer; }
+      .intro-skip:hover {background:rgba(50,71,91,.7)} .intro-skip:focus-visible{outline:3px solid #d8ddff;outline-offset:3px}
+      .intro-scene.is-leaving {opacity:0;pointer-events:none}
+      @media (prefers-reduced-motion:reduce) { .intro-scene {display:none} }
+
     </style>
   </head>
   <body>
+    <div class="intro-scene" id="intro-scene" role="dialog" aria-modal="true" aria-label="Заставка сайта">
+      <div class="intro-snow" id="intro-snow" aria-hidden="true"></div>
+      <button type="button" class="intro-skip" id="intro-skip">Пропустить ›</button>
+      <div class="intro-lockup"><p class="intro-kicker">Личная страница</p><p class="intro-name">The_Phantom-_-</p><div class="intro-line"></div></div>
+    </div>
     <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
     <div class="mist" aria-hidden="true"></div>
     <div class="snow" aria-hidden="true" id="snow"></div>
@@ -471,14 +506,20 @@
               <span class="track-name">No, the moon</span>
               <span class="track-artist">deadflowers</span>
             </div>
+            <button class="volume-toggle" id="volume-toggle" type="button" aria-label="Настроить громкость" aria-controls="volume-panel" aria-expanded="false" title="Громкость"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
             <button class="music" id="music" type="button" aria-label="Включить музыку" title="Включить музыку" disabled><span aria-hidden="true">▶</span></button>
           </div>
-          <div class="volume-row">
+          <div class="seek-row">
+            <time id="elapsed">0:00</time>
+            <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Перемотка трека" aria-valuetext="0:00" disabled />
+            <time id="duration">--:--</time>
+          </div>
+          <div class="volume-row" id="volume-panel" hidden>
             <label for="volume">Громкость</label>
             <input id="volume" type="range" min="0" max="100" value="35" aria-label="Громкость музыки" />
           </div>
           <p class="music-status" id="music-status" role="status"></p>
-          <audio id="audio" loop preload="none"></audio>
+          <audio id="audio" loop preload="metadata"></audio>
         </section>
       </section>
     </main>
@@ -516,6 +557,40 @@
             ? "Не все ссылки пока добавлены"
             : "Ссылки появятся здесь";
       const musicButton = $("music"), audio = $("audio"), volume = $("volume"), musicStatus = $("music-status");
+      const seek = $("seek"), elapsed = $("elapsed"), duration = $("duration");
+      const volumeToggle = $("volume-toggle"), volumePanel = $("volume-panel");
+      volumeToggle.addEventListener("click", () => {
+        volumePanel.hidden = !volumePanel.hidden;
+        volumeToggle.setAttribute("aria-expanded", String(!volumePanel.hidden));
+      });
+      function updateVolumeFill() { volume.style.setProperty("--progress", volume.value + "%"); }
+      updateVolumeFill();
+      volume.addEventListener("input", updateVolumeFill);
+      function formatTime(value) {
+        if (!Number.isFinite(value) || value < 0) return "--:--";
+        const seconds = Math.floor(value);
+        const minutes = Math.floor(seconds / 60);
+        return minutes + ":" + String(seconds % 60).padStart(2, "0");
+      }
+      function updateTimeline() {
+        const ready = Number.isFinite(audio.duration) && audio.duration > 0;
+        seek.disabled = !ready;
+        elapsed.textContent = formatTime(audio.currentTime);
+        duration.textContent = formatTime(audio.duration);
+        seek.value = ready ? Math.round(audio.currentTime / audio.duration * 1000) : 0;
+        seek.style.setProperty("--progress", (Number(seek.value) / 10) + "%");
+        seek.setAttribute("aria-valuetext", ready ? `${formatTime(audio.currentTime)} из ${formatTime(audio.duration)}` : "Длительность недоступна");
+      }
+      audio.addEventListener("loadedmetadata", updateTimeline);
+      audio.addEventListener("durationchange", updateTimeline);
+      audio.addEventListener("timeupdate", updateTimeline);
+      audio.addEventListener("emptied", updateTimeline);
+      seek.addEventListener("input", () => {
+        if (Number.isFinite(audio.duration) && audio.duration > 0) {
+          audio.currentTime = Number(seek.value) / 1000 * audio.duration;
+          updateTimeline();
+        }
+      });
       audio.volume = Number(volume.value) / 100;
       volume.addEventListener("input", () => { audio.volume = Number(volume.value) / 100; });
       function updateMusicButton() {
@@ -661,6 +736,30 @@
         });
       }
 
+    </script>
+    <script>
+      (() => {
+        const intro = document.getElementById("intro-scene"), skip = document.getElementById("intro-skip"), main = document.querySelector("main");
+        if (matchMedia("(prefers-reduced-motion: reduce)").matches) { intro.remove(); return; }
+        main.inert = true;
+        const snow = document.getElementById("intro-snow");
+        for (let i = 0; i < 38; i++) {
+          const f = document.createElement("i"); f.className = "intro-flake";
+          f.style.setProperty("--x", (Math.random() * 100).toFixed(1) + "%");
+          f.style.setProperty("--s", (1 + Math.random() * 3).toFixed(1) + "px");
+          f.style.setProperty("--o", (.2 + Math.random() * .55).toFixed(2));
+          f.style.setProperty("--t", (9 + Math.random() * 13).toFixed(1) + "s");
+          f.style.setProperty("--delay", (-Math.random() * 18).toFixed(1) + "s");
+          f.style.setProperty("--drift", (15 + Math.random() * 70).toFixed(1) + "px"); snow.appendChild(f);
+        }
+        let closed = false;
+        function closeIntro() {
+          if (closed) return; closed = true; intro.classList.add("is-leaving");
+          main.inert = false; setTimeout(() => intro.remove(), 850);
+        }
+        skip.addEventListener("click", closeIntro);
+        setTimeout(closeIntro, 4000);
+      })();
     </script>
   </body>
 </html>
