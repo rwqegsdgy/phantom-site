@@ -159,9 +159,12 @@
         width: min(100%, 460px);
         padding: 40px 32px 32px;
         text-align: center;
-        background: transparent;
-        border: 1px solid transparent;
+        background: linear-gradient(145deg, rgba(224, 238, 249, .05) 0%, rgba(121, 148, 171, .018) 38%, rgba(19, 28, 37, .055) 74%, rgba(189, 213, 232, .035) 100%);
+        border: 1px solid rgba(220, 235, 248, .09);
         border-radius: 28px;
+        backdrop-filter: blur(15px) saturate(1.08);
+        -webkit-backdrop-filter: blur(15px) saturate(1.08);
+        box-shadow: inset 1px 1px 3px rgba(238, 248, 255, .14), inset -1px -2px 4px rgba(192, 218, 238, .08), 0 14px 32px rgba(0, 0, 0, .16), 0 3px 9px rgba(0, 0, 0, .12);
       }
       .card {
         position: relative;
@@ -175,62 +178,15 @@
         from { opacity: 0; translate: 0 22px; }
         to { opacity: 1; translate: 0 0; }
       }
-      .card::before {
-        content: "";
-        position: absolute;
-        inset: -32px;
-        border-radius: 60px;
-        pointer-events: none;
-        z-index: -1;
-        background: linear-gradient(
-          145deg,
-          rgba(235, 240, 255, 0.13),
-          rgba(25, 26, 31, 0.16) 56%,
-          rgba(255, 255, 255, 0.065)
-        );
-        backdrop-filter: blur(28px) saturate(1.1);
-        -webkit-backdrop-filter: blur(28px) saturate(1.1);
-        mask-image:
-          linear-gradient(
-            to right,
-            transparent,
-            black 15%,
-            black 85%,
-            transparent
-          ),
-          linear-gradient(
-            to bottom,
-            transparent,
-            black 15%,
-            black 85%,
-            transparent
-          );
-        mask-composite: intersect;
-        -webkit-mask-image:
-          linear-gradient(
-            to right,
-            transparent,
-            black 15%,
-            black 85%,
-            transparent
-          ),
-          linear-gradient(
-            to bottom,
-            transparent,
-            black 15%,
-            black 85%,
-            transparent
-          );
-        -webkit-mask-composite: source-in;
-      }
       .card::after {
         content: "";
         position: absolute;
-        inset: 2px;
-        border-radius: 26px;
+        inset: -2px;
+        border-radius: 30px;
         pointer-events: none;
-        border: 1px solid rgba(235, 240, 255, 0.25);
-        filter: blur(1.5px);
+        border: 1px solid rgba(220, 237, 249, .20);
+        box-shadow: 0 0 7px rgba(182, 212, 235, .09), inset 0 0 6px rgba(220, 237, 249, .08);
+        filter: blur(2.5px);
       }
       @media (prefers-reduced-motion: reduce) {
         .card {
@@ -341,9 +297,9 @@
         width: min(100%, 345px);
         margin: 25px auto 0;
         padding: 13px 14px 9px;
-        border: 1px solid rgba(221, 239, 255, .16);
+        border: 1px solid rgba(221, 239, 255, .08);
         border-radius: 14px;
-        background: rgba(9, 15, 22, .38);
+        background: rgba(12, 16, 21, .12);
         text-align: left;
       }
       .player-top { display: flex; align-items: center; gap: 10px; }
@@ -358,7 +314,7 @@
         background: transparent; color: #e9f5ff; cursor: pointer;
         transition: background .2s, transform .2s;
       }
-      .music { width: 44px; flex-basis: 44px; border: 1px solid rgba(224,241,255,.25); border-radius: 50%; background: rgba(220,239,255,.11); font: 14px/1 system-ui,sans-serif; }
+      .music { width: 44px; flex-basis: 44px; border: 1px solid rgba(224,241,255,.25); border-radius: 50%; background: rgba(220,239,255,.06); font: 14px/1 system-ui,sans-serif; }
       .volume-toggle:hover, .volume-toggle[aria-expanded="true"], .music:hover { background: rgba(220,239,255,.18); }
       .music:active { transform: scale(.94); }
       .music[disabled] { opacity: .5; cursor: default; }
@@ -366,12 +322,14 @@
       .volume-toggle:focus-visible, .music:focus-visible { outline: 3px solid #d8ddff; outline-offset: 3px; }
       .seek-row { margin-top: 8px; display: flex; align-items: center; gap: 7px; color: #cbd7e1; font-size: 11px; font-variant-numeric: tabular-nums; }
       .seek-row time { width: 32px; flex: 0 0 32px; text-align: center; }
-      .player input[type="range"] { flex: 1; min-width: 0; height: 32px; margin: 0; padding: 0; appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer; }
-      .player input[type="range"]::-webkit-slider-runnable-track { height: 3px; border-radius: 5px; background: linear-gradient(to right, #d1ebfa 0 var(--progress, 0%), rgba(213,232,245,.25) var(--progress, 0%) 100%); }
-      .player input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance:none; width:10px; height:10px; margin-top:-3.5px; border:0; border-radius:50%; background:#f4fbff; box-shadow:0 0 7px rgba(184,225,255,.55); }
+      .range-wrap { position:relative; display:flex; flex:1; min-width:0; align-items:center; }
+      .range-wrap::before { content:""; position:absolute; left:0; top:50%; width:var(--progress, 0%); height:3px; transform:translateY(-50%); border-radius:5px; background:#d5efff; box-shadow:0 0 5px 2px rgba(174,223,255,.68), 0 0 13px 4px rgba(114,188,244,.38); opacity:var(--glow-opacity, 0); pointer-events:none; }
+      .player input[type="range"] { position:relative; z-index:1; width:100%; flex: 1; min-width: 0; height: 32px; margin: 0; padding: 0; appearance: none; -webkit-appearance: none; background: transparent; cursor: pointer; }
+      .player input[type="range"]::-webkit-slider-runnable-track { height: 3px; border-radius: 5px; background: linear-gradient(to right, #d5efff 0 var(--progress, 0%), rgba(213,232,245,.24) var(--progress, 0%) 100%); }
+      .player input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance:none; width:10px; height:10px; margin-top:-3.5px; border:0; border-radius:50%; background:#f4fbff; box-shadow:0 0 6px rgba(205,238,255,.9), 0 0 14px rgba(139,201,255,.65); }
       .player input[type="range"]::-moz-range-track { height:3px; border-radius:5px; background:rgba(213,232,245,.25); }
-      .player input[type="range"]::-moz-range-progress { height:3px; border-radius:5px; background:#d1ebfa; }
-      .player input[type="range"]::-moz-range-thumb { width:10px; height:10px; border:0; border-radius:50%; background:#f4fbff; }
+      .player input[type="range"]::-moz-range-progress { height:3px; border-radius:5px; background:#d5efff; }
+      .player input[type="range"]::-moz-range-thumb { width:10px; height:10px; border:0; border-radius:50%; background:#f4fbff; box-shadow:0 0 6px rgba(205,238,255,.9), 0 0 14px rgba(139,201,255,.65); }
       .player input[type="range"]:disabled { opacity:.55; cursor:default; }
       .player input[type="range"]:focus-visible { outline: 3px solid #d8ddff; outline-offset: 1px; }
       .volume-row { display:flex; align-items:center; gap:10px; color:#d9e5f0; font-size:12px; }
@@ -416,6 +374,7 @@
         }
       }
 
+
       .intro-scene { position:fixed; inset:0; z-index:100; overflow:hidden; display:grid; place-items:center; background:linear-gradient(rgba(5, 7, 9, .40), rgba(5, 7, 9, .57)), url("fon.jpg") center / cover no-repeat; color:#f4fbff; opacity:1; transition:opacity .8s ease; }
       .intro-scene::before, .intro-scene::after { content:""; position:absolute; inset:-20%; pointer-events:none; background:radial-gradient(ellipse 38% 16% at 40% 64%, rgba(167,205,233,.08),transparent 72%),radial-gradient(ellipse 38% 14% at 76% 53%,rgba(139,180,216,.06),transparent 75%); filter:blur(32px); animation:intro-mist 5s ease-in-out infinite alternate; }
       .intro-scene::after { opacity:.6; animation-direction:alternate-reverse; animation-duration:7s; }
@@ -424,33 +383,76 @@
       .intro-flake { position:absolute; top:-8px; left:var(--x); width:var(--s); height:var(--s); border-radius:50%; background:#e8f5ff; opacity:var(--o); box-shadow:0 0 10px rgba(190,226,255,.7); animation:intro-fall var(--t) linear var(--delay) infinite; }
       @keyframes intro-fall {from{transform:translate3d(0,-10px,0)}to{transform:translate3d(var(--drift),110vh,0)}}
       .intro-lockup { position:relative; z-index:1; padding:24px; text-align:center; animation:intro-lockup 3.9s ease both; }
-      .intro-kicker { margin:0 0 16px; color:#b7d0e3; font-size:11px; font-weight:700; letter-spacing:.3em; text-transform:uppercase; }
       .intro-name { margin:0; font-size:clamp(26px, 5vw, 48px); font-weight:650; letter-spacing:.04em; line-height:1.15; text-shadow:0 0 28px rgba(163,212,255,.35); overflow-wrap:anywhere; }
-      .intro-line { width:0; max-width:70vw; height:1px; margin:20px auto 0; background:linear-gradient(90deg, transparent,#c2e6ff,transparent); box-shadow:0 0 14px rgba(187,227,255,.8); animation:intro-line 2s .4s cubic-bezier(.2,.8,.2,1) forwards; }
       @keyframes intro-lockup { 0%{opacity:0;filter:blur(12px);transform:translateY(14px) scale(.97)} 30%,72%{opacity:1;filter:blur(0);transform:translateY(0) scale(1)} 100%{opacity:0;filter:blur(5px);transform:translateY(-8px) scale(1.025)} }
-      @keyframes intro-line {to{width:220px}}
-      .intro-skip { position:absolute; z-index:2; top:max(18px,env(safe-area-inset-top)); right:20px; min-height:44px; padding:0 13px; border:1px solid rgba(220,238,255,.22); border-radius:9px; background:rgba(18,27,37,.68); color:#e1edf6; font:13px system-ui,sans-serif; cursor:pointer; }
-      .intro-skip:hover {background:rgba(50,71,91,.7)} .intro-skip:focus-visible{outline:3px solid #d8ddff;outline-offset:3px}
       .intro-scene.is-leaving {opacity:0;pointer-events:none}
       @media (prefers-reduced-motion:reduce) { .intro-scene {display:none} }
 
+      /* Вариант 8: почти прозрачное стекло, компоновка вдохновлена шаблоном. */
+      .card { width:min(100%, 600px); background:linear-gradient(140deg,rgba(227,240,249,.018),rgba(12,24,33,.025)); border:1px solid rgba(224,242,255,.05); backdrop-filter:blur(3px) saturate(1.08); -webkit-backdrop-filter:blur(3px) saturate(1.08); box-shadow:0 10px 32px rgba(0,0,0,.05); padding:26px 32px; }
+      .card::after { inset:-2px; border:1px solid rgba(220,238,250,.075); box-shadow:0 0 10px rgba(220,238,250,.075); filter:blur(5px); }
+      .profile-heading { display:flex; align-items:center; gap:24px; text-align:left; }
+      .profile-heading-text { min-width:0; }
+      .profile-heading .avatar { width:100px; height:100px; flex:0 0 100px; }
+      .profile-heading .eyebrow { margin:0 0 10px; }
+      .profile-heading h1 { font-size:clamp(25px,4vw,36px); margin:0; letter-spacing:-.03em; text-shadow:0 0 20px rgba(182,222,255,.25); }
+      .player { width:100%; margin:18px 0 0; padding:14px 16px 10px; }
+      .label { margin:22px 0 8px; }
+      .socials, .names { width:min(100%,360px); }
+      .socials { margin:12px auto 0; }
+      .names { margin:0 auto; }
+      .social { background:transparent; border-color:transparent; }
+      .social svg { filter:drop-shadow(0 0 7px rgba(190,228,255,.35)); }
+      .social:hover { background:rgba(220,239,255,.10); }
+      @media (max-width:500px) {
+        .card { padding:22px 20px 20px; }
+        .profile-heading { gap:16px; }
+        .profile-heading .avatar { width:76px; height:76px; flex-basis:76px; }
+        .profile-heading .eyebrow { font-size:10px; letter-spacing:.16em; margin-bottom:8px; }
+        .profile-heading h1 { font-size:clamp(20px,6vw,28px); }
+        .player { margin-top:17px; }
+      }
     </style>
   </head>
   <body>
-    <div class="intro-scene" id="intro-scene" role="dialog" aria-modal="true" aria-label="Заставка сайта">
+    <div class="intro-scene" id="intro-scene" aria-hidden="true">
       <div class="intro-snow" id="intro-snow" aria-hidden="true"></div>
-      <button type="button" class="intro-skip" id="intro-skip">Пропустить ›</button>
-      <div class="intro-lockup"><p class="intro-kicker">Личная страница</p><p class="intro-name">The_Phantom-_-</p><div class="intro-line"></div></div>
+      <div class="intro-lockup"><p class="intro-name">The_Phantom-_-</p></div>
     </div>
     <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
     <div class="mist" aria-hidden="true"></div>
     <div class="snow" aria-hidden="true" id="snow"></div>
     <main>
       <section class="card" aria-label="Личная визитка">
-        <img src="avatar.jpg" class="avatar" alt="Аватарка The Phantom" draggable="false" />
-        <p class="eyebrow">Личная страница</p>
-        <h1 id="nickname">The_Phantom-_-</h1>
-        <p class="label" id="status">Ссылки появятся здесь</p>
+        <div class="profile-heading">
+          <img src="avatar.jpg" class="avatar" alt="Аватарка The Phantom" draggable="false" />
+          <div class="profile-heading-text">
+            <p class="eyebrow">Личная страница</p>
+            <h1 id="nickname">The_Phantom-_-</h1>
+          </div>
+        </div>
+        <section class="player" aria-label="Музыкальный плеер">
+          <div class="player-top">
+            <img class="album-art" src="cover.webp" alt="Обложка трека No, the moon" draggable="false" />
+            <div class="track-info">
+              <span class="track-name">No, the moon</span>
+              <span class="track-artist">deadflowers</span>
+            </div>
+            <button class="volume-toggle" id="volume-toggle" type="button" aria-label="Настроить громкость" aria-controls="volume-panel" aria-expanded="false" title="Громкость"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
+            <button class="music" id="music" type="button" aria-label="Включить музыку" title="Включить музыку" disabled><span aria-hidden="true">▶</span></button>
+          </div>
+          <div class="seek-row">
+            <time id="elapsed">0:00</time>
+            <div class="range-wrap"><input id="seek" type="range" min="0" max="1000" value="0" aria-label="Перемотка трека" aria-valuetext="0:00" disabled /></div>
+            <time id="duration">--:--</time>
+          </div>
+          <div class="volume-row" id="volume-panel" hidden>
+            <label for="volume">Громкость</label>
+            <div class="range-wrap"><input id="volume" type="range" min="0" max="100" value="35" aria-label="Громкость музыки" /></div>
+          </div>
+          <p class="music-status" id="music-status" role="status"></p>
+          <audio id="audio" loop preload="metadata"></audio>
+        </section>
         <div class="socials" id="socials">
           <a class="social" id="steam" aria-label="Steam: The_Phantom-_-"
             ><svg
@@ -499,28 +501,6 @@
         <div class="names" aria-hidden="true">
           <span>Steam<small>The_Phantom-_-</small></span><span>Discord<small>rwqegsdgy</small></span><span>Сервер<small>LifeLine</small></span>
         </div>
-        <section class="player" aria-label="Музыкальный плеер">
-          <div class="player-top">
-            <img class="album-art" src="cover.webp" alt="Обложка трека No, the moon" draggable="false" />
-            <div class="track-info">
-              <span class="track-name">No, the moon</span>
-              <span class="track-artist">deadflowers</span>
-            </div>
-            <button class="volume-toggle" id="volume-toggle" type="button" aria-label="Настроить громкость" aria-controls="volume-panel" aria-expanded="false" title="Громкость"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9v6h4l5 4V5L8 9H4z"/><path d="M16 9a4 4 0 0 1 0 6M18.5 6.5a7.5 7.5 0 0 1 0 11"/></svg></button>
-            <button class="music" id="music" type="button" aria-label="Включить музыку" title="Включить музыку" disabled><span aria-hidden="true">▶</span></button>
-          </div>
-          <div class="seek-row">
-            <time id="elapsed">0:00</time>
-            <input id="seek" type="range" min="0" max="1000" value="0" aria-label="Перемотка трека" aria-valuetext="0:00" disabled />
-            <time id="duration">--:--</time>
-          </div>
-          <div class="volume-row" id="volume-panel" hidden>
-            <label for="volume">Громкость</label>
-            <input id="volume" type="range" min="0" max="100" value="35" aria-label="Громкость музыки" />
-          </div>
-          <p class="music-status" id="music-status" role="status"></p>
-          <audio id="audio" loop preload="metadata"></audio>
-        </section>
       </section>
     </main>
     <script src="config.js"></script>
@@ -550,12 +530,6 @@
           el.title = "Ссылка пока не добавлена";
         }
       }
-      $("status").textContent =
-        count === 3
-          ? "Мои ссылки"
-          : count
-            ? "Не все ссылки пока добавлены"
-            : "Ссылки появятся здесь";
       const musicButton = $("music"), audio = $("audio"), volume = $("volume"), musicStatus = $("music-status");
       const seek = $("seek"), elapsed = $("elapsed"), duration = $("duration");
       const volumeToggle = $("volume-toggle"), volumePanel = $("volume-panel");
@@ -563,7 +537,8 @@
         volumePanel.hidden = !volumePanel.hidden;
         volumeToggle.setAttribute("aria-expanded", String(!volumePanel.hidden));
       });
-      function updateVolumeFill() { volume.style.setProperty("--progress", volume.value + "%"); }
+      function setRangeGlow(input, percent) { input.style.setProperty("--progress", percent + "%"); input.parentElement.style.setProperty("--progress", percent + "%"); input.parentElement.style.setProperty("--glow-opacity", percent > 0 ? "1" : "0"); }
+      function updateVolumeFill() { setRangeGlow(volume, Number(volume.value)); }
       updateVolumeFill();
       volume.addEventListener("input", updateVolumeFill);
       function formatTime(value) {
@@ -578,7 +553,7 @@
         elapsed.textContent = formatTime(audio.currentTime);
         duration.textContent = formatTime(audio.duration);
         seek.value = ready ? Math.round(audio.currentTime / audio.duration * 1000) : 0;
-        seek.style.setProperty("--progress", (Number(seek.value) / 10) + "%");
+        setRangeGlow(seek, Number(seek.value) / 10);
         seek.setAttribute("aria-valuetext", ready ? `${formatTime(audio.currentTime)} из ${formatTime(audio.duration)}` : "Длительность недоступна");
       }
       audio.addEventListener("loadedmetadata", updateTimeline);
@@ -739,7 +714,7 @@
     </script>
     <script>
       (() => {
-        const intro = document.getElementById("intro-scene"), skip = document.getElementById("intro-skip"), main = document.querySelector("main");
+        const intro = document.getElementById("intro-scene"), main = document.querySelector("main");
         if (matchMedia("(prefers-reduced-motion: reduce)").matches) { intro.remove(); return; }
         main.inert = true;
         const snow = document.getElementById("intro-snow");
@@ -757,7 +732,6 @@
           if (closed) return; closed = true; intro.classList.add("is-leaving");
           main.inert = false; setTimeout(() => intro.remove(), 850);
         }
-        skip.addEventListener("click", closeIntro);
         setTimeout(closeIntro, 4000);
       })();
     </script>
