@@ -88,39 +88,66 @@
         to { transform: translate3d(var(--drift), calc(100svh + 30px), 0); }
       }
       @keyframes snow-sway {
-        from { transform: translateX(-8px); }
-        to { transform: translateX(8px); }
+        from { transform: translateX(calc(var(--sway) * -1)) scale(.85); }
+        to { transform: translateX(var(--sway)) scale(1.12); }
       }
       .click-spark {
         position: fixed;
         z-index: 30;
         left: var(--x);
         top: var(--y);
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
+        width: 0;
+        height: 0;
         pointer-events: none;
-        background: rgba(240, 249, 255, .88);
-        box-shadow: 0 0 15px 5px rgba(167, 209, 255, .45);
-        animation: click-glow 700ms ease-out forwards;
       }
-      .click-spark::before, .click-spark::after {
+      .click-spark::before {
         content: "";
         position: absolute;
-        inset: -8px;
-        border: 1px solid rgba(215, 238, 255, .7);
+        width: 38px;
+        height: 38px;
+        left: -19px;
+        top: -19px;
+        border: 1px solid rgba(222, 244, 255, .85);
         border-radius: 50%;
-        animation: click-ring 700ms ease-out forwards;
+        box-shadow: 0 0 12px rgba(156, 216, 255, .7), inset 0 0 9px rgba(204, 235, 255, .35);
+        animation: frost-ring 760ms cubic-bezier(.15,.65,.25,1) forwards;
       }
-      .click-spark::after { animation-delay: 75ms; border-color: rgba(210, 231, 255, .35); }
-      @keyframes click-glow {
-        0% { opacity: .9; transform: translate(-50%, -50%) scale(.4); }
-        30% { opacity: .75; }
-        100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+      .click-spark::after {
+        content: "";
+        position: absolute;
+        width: 42px;
+        height: 42px;
+        left: -21px;
+        top: -21px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255,255,255,.95) 0%, rgba(179,225,255,.5) 15%, rgba(140,198,255,.16) 38%, transparent 70%);
+        animation: frost-flash 700ms ease-out forwards;
       }
-      @keyframes click-ring {
-        from { opacity: .85; transform: scale(.25); }
-        to { opacity: 0; transform: scale(3.8); }
+      .ice-particle {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: var(--size);
+        height: var(--size);
+        border-radius: var(--round);
+        background: rgba(231, 248, 255, .95);
+        box-shadow: 0 0 6px 1px rgba(155, 214, 255, .65);
+        animation: ice-burst var(--life) cubic-bezier(.14,.65,.24,1) forwards;
+      }
+      @keyframes frost-ring {
+        0% { opacity: .9; transform: scale(.18); }
+        55% { opacity: .55; }
+        100% { opacity: 0; transform: scale(2.15); }
+      }
+      @keyframes frost-flash {
+        0% { opacity: .95; transform: scale(.25); }
+        30% { opacity: .8; transform: scale(1.2); }
+        100% { opacity: 0; transform: scale(1.6); }
+      }
+      @keyframes ice-burst {
+        0% { opacity: 1; transform: translate(-50%, -50%) scale(.35) rotate(0deg); }
+        25% { opacity: .95; }
+        100% { opacity: 0; transform: translate(calc(var(--dx) - 50%), calc(var(--dy) - 50%)) scale(.18) rotate(var(--spin)); }
       }
       main {
         overflow-x: clip;
@@ -535,21 +562,22 @@
       }
       const snow = $("snow");
       if (!motion.matches) {
-        const amount = matchMedia("(max-width: 500px)").matches ? 34 : 52;
+        const amount = matchMedia("(max-width: 500px)").matches ? 65 : 115;
         for (let i = 0; i < amount; i++) {
           const f = document.createElement("i");
           const depth = Math.random();
-          const size = 1.2 + depth * 2.7;
+          const size = 1.4 + depth * 4.4;
           f.className = "flake";
           f.style.setProperty("--left", (Math.random() * 100).toFixed(2) + "%");
           f.style.setProperty("--size", size.toFixed(1) + "px");
-          f.style.setProperty("--opacity", (0.2 + depth * 0.5).toFixed(2));
-          f.style.setProperty("--blur", (depth > 0.8 ? 0.55 : 0).toFixed(1) + "px");
+          f.style.setProperty("--opacity", (0.28 + depth * 0.52).toFixed(2));
+          f.style.setProperty("--blur", (depth > 0.8 ? 1.05 : depth > 0.55 ? 0.35 : 0).toFixed(1) + "px");
           f.style.setProperty("--glow", (1 + depth * 4).toFixed(1) + "px");
-          f.style.setProperty("--duration", (15 + (1 - depth) * 20 + Math.random() * 8).toFixed(1) + "s");
-          f.style.setProperty("--delay", (-Math.random() * 40).toFixed(1) + "s");
-          f.style.setProperty("--sway-duration", (3 + Math.random() * 4).toFixed(1) + "s");
-          f.style.setProperty("--drift", (20 + Math.random() * 65).toFixed(1) + "px");
+          f.style.setProperty("--duration", (11 + (1 - depth) * 17 + Math.random() * 7).toFixed(1) + "s");
+          f.style.setProperty("--delay", (-Math.random() * 45).toFixed(1) + "s");
+          f.style.setProperty("--sway-duration", (2.8 + Math.random() * 4.2).toFixed(1) + "s");
+          f.style.setProperty("--sway", (8 + depth * 13 + Math.random() * 8).toFixed(1) + "px");
+          f.style.setProperty("--drift", (-35 + Math.random() * 115).toFixed(1) + "px");
           snow.appendChild(f);
         }
         document.addEventListener("pointerdown", (event) => {
@@ -559,9 +587,22 @@
           spark.setAttribute("aria-hidden", "true");
           spark.style.setProperty("--x", event.clientX + "px");
           spark.style.setProperty("--y", event.clientY + "px");
+          const count = 12;
+          for (let i = 0; i < count; i++) {
+            const flake = document.createElement("i");
+            const angle = (i / count) * Math.PI * 2 + (Math.random() - .5) * .32;
+            const distance = 35 + Math.random() * 50;
+            flake.className = "ice-particle";
+            flake.style.setProperty("--dx", (Math.cos(angle) * distance).toFixed(1) + "px");
+            flake.style.setProperty("--dy", (Math.sin(angle) * distance + 12).toFixed(1) + "px");
+            flake.style.setProperty("--size", (2 + Math.random() * 3.5).toFixed(1) + "px");
+            flake.style.setProperty("--round", i % 3 ? "50%" : "1px");
+            flake.style.setProperty("--spin", (Math.random() * 180).toFixed(0) + "deg");
+            flake.style.setProperty("--life", (650 + Math.random() * 300).toFixed(0) + "ms");
+            spark.appendChild(flake);
+          }
           document.body.appendChild(spark);
-          spark.addEventListener("animationend", () => spark.remove(), { once: true });
-          setTimeout(() => spark.remove(), 1000);
+          setTimeout(() => spark.remove(), 1100);
         });
       }
 
