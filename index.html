@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <meta name="theme-color" content="#101112" />
     <title>The_Phantom-_-</title>
+    <link rel="stylesheet" href="background.css" />
     <style>
       * {
         box-sizing: border-box;
@@ -28,7 +29,7 @@
           sans-serif;
         background:
           linear-gradient(rgba(5, 7, 9, 0.34), rgba(5, 7, 9, 0.53)),
-          url("fon.jpg") center/cover fixed;
+          var(--site-background) center/cover fixed;
       }
       .cursor-glow {
         position: fixed;
@@ -375,7 +376,7 @@
       }
 
 
-      .intro-scene { position:fixed; inset:0; z-index:100; overflow:hidden; display:grid; place-items:center; background:linear-gradient(rgba(5, 7, 9, .40), rgba(5, 7, 9, .57)), url("fon.jpg") center / cover no-repeat; color:#f4fbff; opacity:1; transition:opacity .8s ease; }
+      .intro-scene { position:fixed; inset:0; z-index:100; overflow:hidden; display:grid; place-items:center; background:linear-gradient(rgba(5, 7, 9, .40), rgba(5, 7, 9, .57)), var(--site-background) center / cover no-repeat; color:#f4fbff; opacity:1; transition:opacity .8s ease; }
       .intro-scene::before, .intro-scene::after { content:""; position:absolute; inset:-20%; pointer-events:none; background:radial-gradient(ellipse 38% 16% at 40% 64%, rgba(167,205,233,.08),transparent 72%),radial-gradient(ellipse 38% 14% at 76% 53%,rgba(139,180,216,.06),transparent 75%); filter:blur(32px); animation:intro-mist 5s ease-in-out infinite alternate; }
       .intro-scene::after { opacity:.6; animation-direction:alternate-reverse; animation-duration:7s; }
       @keyframes intro-mist {from{transform:translateX(-6%) scale(1)}to{transform:translateX(6%) scale(1.08)}}
