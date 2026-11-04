@@ -16,6 +16,8 @@
         background: #111;
       }
       body {
+        -webkit-user-select: none;
+        user-select: none;
         min-height: 100vh;
         min-height: 100svh;
         color: #f5f5f4;
@@ -351,7 +353,7 @@
     <div class="snow" aria-hidden="true" id="snow"></div>
     <main>
       <section class="card" aria-label="Личная визитка">
-        <img src="avatar.jpg" class="avatar" alt="Аватарка The Phantom" />
+        <img src="avatar.jpg" class="avatar" alt="Аватарка The Phantom" draggable="false" />
         <p class="eyebrow">Личная страница</p>
         <h1 id="nickname">The_Phantom-_-</h1>
         <p class="label" id="status">Ссылки появятся здесь</p>
