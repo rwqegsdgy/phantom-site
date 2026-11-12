@@ -1,0 +1,302 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Outfit", system-ui, -apple-system, sans-serif;
+  --font-sans: "Manrope", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    font-family: var(--font-sans);
+    background-color: #070a0f;
+    color: #f2f6fb;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+}
+
+/* Custom audio range sliders */
+input[type="range"].frost-range {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+input[type="range"].frost-range::-webkit-slider-runnable-track {
+  height: 3px;
+  border-radius: 9999px;
+  background: transparent;
+}
+
+input[type="range"].frost-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 11px;
+  height: 11px;
+  margin-top: -4px;
+  border-radius: 9999px;
+  background: #f4f9ff;
+  box-shadow: none;
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+input[type="range"].frost-range:hover::-webkit-slider-thumb {
+  transform: scale(1.18);
+}
+
+input[type="range"].frost-range::-moz-range-track {
+  height: 3px;
+  border-radius: 9999px;
+  background: transparent;
+}
+
+input[type="range"].frost-range::-moz-range-progress {
+  height: 3px;
+  border-radius: 9999px;
+  background: transparent;
+}
+
+input[type="range"].frost-range::-moz-range-thumb {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 9999px;
+  background: #f4f9ff;
+  box-shadow: none;
+}
+
+/* Subtle nocturnal scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #070a0f;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(180, 212, 240, 0.18);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(180, 212, 240, 0.32);
+}
+
+/* Intro Scene Animations */
+@keyframes intro-mist {
+  from {
+    transform: translateX(-6%) scale(1);
+  }
+  to {
+    transform: translateX(6%) scale(1.08);
+  }
+}
+
+@keyframes intro-fall {
+  from {
+    transform: translate3d(0, -12px, 0);
+  }
+  to {
+    transform: translate3d(var(--intro-drift, 40px), 110vh, 0);
+  }
+}
+
+@keyframes intro-lockup {
+  0% {
+    opacity: 0;
+    filter: blur(12px);
+    transform: translateY(16px) scale(0.96);
+  }
+  28%,
+  74% {
+    opacity: 1;
+    filter: blur(0);
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    filter: blur(5px);
+    transform: translateY(-8px) scale(1.025);
+  }
+}
+
+@keyframes intro-line {
+  0% {
+    opacity: 0;
+    transform: scaleX(0.15);
+  }
+  35%,
+  75% {
+    opacity: 0.9;
+    transform: scaleX(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+}
+
+.intro-mist-layer {
+  background:
+    radial-gradient(ellipse 38% 18% at 38% 62%, rgba(167, 205, 233, 0.11), transparent 72%),
+    radial-gradient(ellipse 40% 16% at 74% 48%, rgba(139, 180, 216, 0.08), transparent 75%);
+  filter: blur(34px);
+  animation: intro-mist 5.2s ease-in-out infinite alternate;
+}
+
+.intro-flake {
+  position: absolute;
+  top: -10px;
+  border-radius: 9999px;
+  background: #e8f5ff;
+  box-shadow: 0 0 10px rgba(190, 226, 255, 0.72);
+  animation-name: intro-fall;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+.intro-lockup {
+  animation: intro-lockup 3.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.intro-divider {
+  animation: intro-line 3.85s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* UI Micro & Entrance Animations */
+@keyframes frost-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(18px) scale(0.975);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+    filter: none;
+  }
+}
+
+@keyframes frost-pop {
+  0% {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes frost-breathe {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.75;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes cover-swap {
+  0% {
+    opacity: 0.35;
+    transform: scale(0.94);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes zen-enter {
+  0% {
+    opacity: 0;
+    transform: scale(0.985);
+  }
+  100% {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes track-swap {
+  0% {
+    opacity: 0;
+    transform: translateY(8px) scale(0.96);
+    filter: blur(4px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes icon-pop {
+  0% {
+    opacity: 0;
+    transform: scale(0.65) rotate(-12deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+  }
+}
+
+.animate-frost-rise {
+  animation: frost-rise 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-frost-pop {
+  animation: frost-pop 0.55s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-frost-breathe {
+  animation: frost-breathe 3.6s ease-in-out infinite;
+}
+
+.animate-cover-swap {
+  animation: cover-swap 0.42s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-track-swap {
+  animation: track-swap 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-icon-pop {
+  animation: icon-pop 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-zen-enter {
+  animation: zen-enter 0.38s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .intro-mist-layer,
+  .intro-flake,
+  .intro-lockup,
+  .intro-divider,
+  .animate-frost-rise,
+  .animate-frost-pop,
+  .animate-frost-breathe,
+  .animate-cover-swap,
+  .animate-track-swap,
+  .animate-icon-pop,
+  .animate-zen-enter {
+    animation: none !important;
+  }
+}
+
